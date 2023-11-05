@@ -48,6 +48,9 @@ class MyHomePage extends ConsumerWidget {
         ref.watch(appStateProvider.select((model) => model.currentSliderValue));
     var scaleWeather =
         ref.watch(appStateProvider.select((model) => model.scaleWeather));
+    var selected =
+        ref.watch(appStateProvider.select((model) => model.selected));
+
     return Scaffold(
         appBar: AppBar(
           actions: [
@@ -62,45 +65,44 @@ class MyHomePage extends ConsumerWidget {
         body: SafeArea(
             child: Column(
           children: [
-            // Container(
-            //     alignment: Alignment.center,
-            //     child: Padding(
-            //         padding: EdgeInsets.only(top: 100),
-            //         child: Transform.scale(
-            //             scale: 3,
-            //             child: SizedBox(
-            //                 height: 150,
-            //                 width: 150,
-            //                 child: CustomPaint(
-            //                     painter: WeatherIndicator(
-            //                         value: currentSliderValue,
-            //                        themeColors: theme.colors)))))),
+            AnimatedScale(
+                alignment: selected
+                    ? Alignment(MediaQuery.of(context).size.width / 2 - 100, 50)
+                    : Alignment.topRight,
+                scale: scaleWeather,
+                duration: const Duration(seconds: 1),
+                child: GestureDetector(
+                    onTap: () {
+                      ref.read(appStateProvider.notifier).changeScale(
+                          MediaQuery.of(context).size.height /
+                              MediaQuery.of(context).size.width);
+                    },
+                    child: Container(
+                      alignment: selected
+                          ? Alignment(
+                              MediaQuery.of(context).size.width / 2 - 100, 50)
+                          : Alignment.topRight,
+                      child: SizedBox(
+                          height: 150,
+                          width: 150,
+                          child: CustomPaint(
+                              painter: WeatherIndicator(
+                                  value: currentSliderValue,
+                                  themeColors: theme.colors))),
+                    ))),
             Padding(
-              padding: const EdgeInsets.all(50),
-              child: AnimatedScale(
-                  scale: scaleWeather,
-                  duration: const Duration(seconds: 1),
-                  child: GestureDetector(onTap: ref.read(appStateProvider.notifier).changeScale,
-                    child: SizedBox(
-                        height: 150,
-                        width: 150,
-                        child: CustomPaint(
-                            painter: WeatherIndicator(
-                                value: currentSliderValue,
-                                themeColors: theme.colors))),
-                  )),
-            ),
-            Slider(
-              activeColor: theme.colors.slider,
-              thumbColor: theme.colors.textFieldColor,
-              value: currentSliderValue,
-              max: 1,
-              divisions: 10,
-              label: currentSliderValue.toString(),
-              onChanged: (value) {
-                ref.read(appStateProvider.notifier).setValue(value);
-              },
-            ),
+                padding: EdgeInsets.only(top: 200),
+                child: Slider(
+                  activeColor: theme.colors.slider,
+                  thumbColor: theme.colors.textFieldColor,
+                  value: currentSliderValue,
+                  max: 1,
+                  divisions: 10,
+                  label: currentSliderValue.toString(),
+                  onChanged: (value) {
+                    ref.read(appStateProvider.notifier).setValue(value);
+                  },
+                )),
           ],
         )));
   }
