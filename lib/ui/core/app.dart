@@ -1,4 +1,5 @@
 import 'package:advanced_widgets/ui/theme/app_theme.dart';
+import 'package:advanced_widgets/ui/theme/text_decoration.dart';
 import 'package:advanced_widgets/ui/widgets/wheather_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -65,44 +66,55 @@ class MyHomePage extends ConsumerWidget {
         body: SafeArea(
             child: Column(
           children: [
-            AnimatedScale(
-                alignment: selected
-                    ? Alignment(MediaQuery.of(context).size.width / 2 - 100, 50)
-                    : Alignment.topRight,
-                scale: scaleWeather,
-                duration: const Duration(seconds: 1),
-                child: GestureDetector(
-                    onTap: () {
-                      ref.read(appStateProvider.notifier).changeScale(
-                          MediaQuery.of(context).size.height /
-                              MediaQuery.of(context).size.width);
-                    },
-                    child: Container(
-                      alignment: selected
-                          ? Alignment(
-                              MediaQuery.of(context).size.width / 2 - 100, 50)
-                          : Alignment.topRight,
-                      child: SizedBox(
-                          height: 150,
-                          width: 150,
-                          child: CustomPaint(
-                              painter: WeatherIndicator(
-                                  value: currentSliderValue,
-                                  themeColors: theme.colors))),
-                    ))),
-            Padding(
-                padding: EdgeInsets.only(top: 200),
-                child: Slider(
-                  activeColor: theme.colors.slider,
-                  thumbColor: theme.colors.textFieldColor,
-                  value: currentSliderValue,
-                  max: 1,
-                  divisions: 10,
-                  label: currentSliderValue.toString(),
-                  onChanged: (value) {
-                    ref.read(appStateProvider.notifier).setValue(value);
-                  },
-                )),
+            Slider(
+              activeColor: theme.colors.slider,
+              thumbColor: theme.colors.textFieldColor,
+              value: currentSliderValue,
+              max: 1,
+              divisions: 10,
+              label: currentSliderValue.toString(),
+              onChanged: (value) {
+                ref.read(appStateProvider.notifier).setValue(value);
+              },
+            ),
+            Stack(children: [
+              AnimatedScale(
+                  alignment: Alignment.topRight,
+                  scale: scaleWeather,
+                  duration: const Duration(seconds: 1),
+                  child: GestureDetector(
+                      onTap: () {
+                        ref.read(appStateProvider.notifier).changeScale(
+                            MediaQuery.of(context).size.height /
+                                MediaQuery.of(context).size.width);
+                      },
+                      child: Container(
+                        alignment: Alignment.topRight,
+                        child: SizedBox.square(
+                            dimension: 150,
+                            child: CustomPaint(
+                                painter: WeatherIndicator(
+                                    value: currentSliderValue,
+                                    themeColors: theme.colors))),
+                      ))),
+              if (selected)
+                Padding(
+                    padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.288,
+                        left: MediaQuery.of(context).size.width * 0.365),
+                    child: AnimatedOpacity(
+                      opacity: selected ? 1.0 : 0.0,
+                      duration: const Duration(milliseconds: 500),
+                      child: InnerShadowText(
+                          child: Text(
+                        'Облачно,\n12 градусов',
+                        style: Theme.of(context).textTheme.headlineMedium,
+                        textAlign: TextAlign.start,
+                      )),
+                    )),
+            ]),
+
+
           ],
         )));
   }

@@ -28,6 +28,7 @@ class AppStateNotifier extends ChangeNotifier {
   void changeScale(double newScale) {
     scaleWeather =
         scaleWeather == 1.0 ? scaleWeather = newScale + 0.3 : scaleWeather = 1.0;
+    selected = !selected;
     notifyListeners();
   }
 
