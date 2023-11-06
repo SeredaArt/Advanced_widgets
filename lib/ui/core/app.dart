@@ -51,6 +51,8 @@ class MyHomePage extends ConsumerWidget {
         ref.watch(appStateProvider.select((model) => model.scaleWeather));
     var selected =
         ref.watch(appStateProvider.select((model) => model.selected));
+    var opacityLevel =
+    ref.read(appStateProvider.select((model) => model.opacityLevel));
 
     return Scaffold(
         appBar: AppBar(
@@ -100,12 +102,14 @@ class MyHomePage extends ConsumerWidget {
               if (selected)
                 Padding(
                     padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.288,
+                        top: MediaQuery.of(context).size.height * 0.288 + 40,
                         left: MediaQuery.of(context).size.width * 0.365),
-                    child: AnimatedOpacity(
-                      opacity: selected ? 1.0 : 0.0,
-                      duration: const Duration(milliseconds: 500),
-                      child: InnerShadowText(
+                    child: AnimatedOpacity(alwaysIncludeSemantics: true,
+                      curve: Curves.easeIn,
+                      key: key,
+                      opacity: opacityLevel,
+                      duration: const Duration(seconds: 1),
+                      child: InnerShadow(
                           child: Text(
                         'Облачно,\n12 градусов',
                         style: Theme.of(context).textTheme.headlineMedium,

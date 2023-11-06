@@ -14,7 +14,9 @@ class WeatherIndicator extends CustomPainter {
       ..style = PaintingStyle.fill;
     final painterCloud = Paint()
       ..style = PaintingStyle.fill
-      ..color = themeColors.cloud.withOpacity(_getCloudOpacity(value));
+      ..color = value > 0.7
+          ? themeColors.darkCloud.withOpacity(_getCloudOpacity(value))
+          : themeColors.cloud.withOpacity(_getCloudOpacity(value));
     final painterRain = Paint()
       ..color = themeColors.drops.withOpacity(_getDropsOpacity(value))
       ..strokeCap = StrokeCap.round
@@ -46,45 +48,37 @@ class WeatherIndicator extends CustomPainter {
     rainPath.moveTo(88, 85);
     rainPath.lineTo(79, 100);
 
-
     canvas.drawPath(rainPath, painterRain);
   }
 
-  double _getDropsOpacity(double value)
-  {
-    if(value < 0.7)
-    {
+  double _getDropsOpacity(double value) {
+    if (value < 0.7) {
       return 0;
     }
 
-    return 10/3 * value - 7/3;
+    return 10 / 3 * value - 7 / 3;
   }
 
-  double _getCloudOpacity(double value)
-  {
-    if(value < 0.2)
-    {
+  double _getCloudOpacity(double value) {
+    if (value < 0.2) {
       return 0;
     }
 
-    return 10/8 * value - 0.25;
+    return 10 / 8 * value - 0.25;
   }
 
-  double _getSunOpacity(double value)
-  {
-    if(value > 0.7)
-    {
+  double _getSunOpacity(double value) {
+    if (value > 0.7) {
       return 0;
     }
 
-    if(value == 0)
-    {
+    if (value == 0) {
       return 1;
     }
 
     return 1 - value;
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

@@ -13,6 +13,7 @@ class AppStateNotifier extends ChangeNotifier {
   double scaleWeather = 1.0;
   double currentSliderValue = 0.5;
   bool selected = false;
+  double opacityLevel = 0;
 
   Future<void> toogleTheme() async {
     theme =
@@ -29,11 +30,8 @@ class AppStateNotifier extends ChangeNotifier {
     scaleWeather =
         scaleWeather == 1.0 ? scaleWeather = newScale + 0.3 : scaleWeather = 1.0;
     selected = !selected;
+    opacityLevel = opacityLevel == 0 ? 1.0 : 0.0;
     notifyListeners();
   }
 
-  void setSelected() {
-    selected = !selected;
-    notifyListeners();
-  }
 }
